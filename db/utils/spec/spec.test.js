@@ -29,6 +29,5 @@ describe("formatDates", () => {
       }
     ];
     expect(formatDates(input)).to.eql(output);
-    expect(input.created_at).to.equal(output.created_at);
   });
 });

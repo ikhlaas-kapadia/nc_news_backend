@@ -14,15 +14,11 @@ exports.seed = function(knex) {
       return knex.migrate.latest();
     })
     .then(() => {
-      const topicsInsertions = knex("topics")
-        .insert(topicData)
-        .returning("*");
+      const topicsInsertions = knex("topics").insert(topicData);
       const usersInsertions = knex("users").insert(userData);
-      return Promise.all([topicsInsertions]);
-    })
-    .then(([resultArray]) => {
-      console.log(resultArray);
+      return Promise.all([topicsInsertions, usersInsertions]);
     });
+
   /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 
