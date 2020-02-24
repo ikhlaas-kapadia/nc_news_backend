@@ -17,6 +17,29 @@ exports.seed = function(knex) {
       const topicsInsertions = knex("topics").insert(topicData);
       const usersInsertions = knex("users").insert(userData);
       return Promise.all([topicsInsertions, usersInsertions]);
+    })
+    .then(() => {
+      const modifiedArticleData = formatDates(articleData);
+      return modifiedArticleData;
+    })
+    .then(modifiedArticles => {
+      return knex("articles")
+        .insert(modifiedArticles)
+        .returning("*");
+    })
+    .then(modifiedArticles => {
+      const refObj = makeRefObj(modifiedArticles);
+      return refObj;
+    })
+    .then(titleToIdReferenceObject => {
+      const formatCommentsData = formatComments(
+        commentData,
+        titleToIdReferenceObject
+      );
+      return formatCommentsData;
+    })
+    .then(formattedComments => {
+      return knex("comments").insert(formattedComments);
     });
 
   /* 

@@ -3,9 +3,9 @@ exports.up = function(knex) {
     commentsTable.increments("comment_id").primary();
     commentsTable.string("author").references("users.username");
     commentsTable.integer("article_id").references("articles.article_id");
-    commentsTable.integer("votes", [0]);
+    commentsTable.integer("votes", 0);
     commentsTable.timestamp("created_at");
-    commentsTable.string("body").notNullable();
+    commentsTable.string("body", 20000).notNullable();
   });
 };
 
