@@ -217,6 +217,14 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("ID not found");
           });
       });
+      it("GET - 400, responds Invalid Input when id is a string", () => {
+        return request(app)
+          .get("/api/articles/hello/comments")
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
     });
   });
 });
