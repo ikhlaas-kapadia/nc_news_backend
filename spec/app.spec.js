@@ -15,7 +15,7 @@ describe("/api", () => {
     return connection.seed.run();
   });
   describe("/topics", () => {
-    it("responds with an array of topic objects", () => {
+    it("GET - 200,responds with an array of topic objects", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
@@ -26,7 +26,7 @@ describe("/api", () => {
           expect(res.body.topics.length).to.equal(3);
         });
     });
-    it("GET: 404 responds with route not found when specified invalid route", () => {
+    it("GET - 404 responds with route not found when specified invalid route", () => {
       return request(app)
         .get("/api/chickenwings")
         .expect(404)
@@ -36,9 +36,9 @@ describe("/api", () => {
         });
     });
   });
-  describe.only("/users", () => {
+  describe("/users", () => {
     describe("/users:username", () => {
-      it("responds with an array of specified username details with a key username", () => {
+      it("GET - 200, responds with an array of specified username details with a key username", () => {
         return request(app)
           .get("/api/users/butter_bridge")
           .expect(200)
@@ -57,6 +57,27 @@ describe("/api", () => {
           .expect(404)
           .then(res => {
             expect(res.body.msg).to.equal("Invalid Username");
+          });
+      });
+    });
+  });
+  describe.only("/articles", () => {
+    describe("/:article_id", () => {
+      it("GET - 200, responds with an article object", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(res => {
+            expect(res.body.article).to.have.all.keys([
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "author",
+              "created_at",
+              "comment_count"
+            ]);
           });
       });
     });
