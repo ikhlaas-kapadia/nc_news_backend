@@ -97,7 +97,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("GET - 200, responds with updated article when passed request object with votes", () => {
+      it("PATCH - 200, responds with updated article when passed request object with votes", () => {
         return request(app)
           .patch("/api/articles/1")
           .send({ inc_votes: 1 })
@@ -112,6 +112,14 @@ describe("/api", () => {
               "author",
               "created_at"
             ]);
+          });
+      });
+      it("PATCH - 404, responds with Article ID does not exist to update", () => {
+        return request(app)
+          .patch("/api/articles/999")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("Article ID does not exist");
           });
       });
     });

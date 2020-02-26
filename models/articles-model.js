@@ -30,7 +30,14 @@ const updateArticleById = (articleId, voteChange) => {
       return connection("articles").where("article_id", "=", articleId);
     })
     .then(updatedArticle => {
-      return { article: updatedArticle[0] };
+      if (updatedArticle.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Article ID does not exist"
+        });
+      } else {
+        return { article: updatedArticle[0] };
+      }
     });
 };
 

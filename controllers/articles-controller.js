@@ -17,10 +17,13 @@ const getArticleById = (req, res, next) => {
 const patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
 
-  updateArticleById(article_id, req.body).then(updatedArticle => {
-    console.log(updatedArticle, "from controller");
-    res.status(200).send(updatedArticle);
-  });
+  updateArticleById(article_id, req.body)
+    .then(updatedArticle => {
+      res.status(200).send(updatedArticle);
+    })
+    .catch(err => {
+      next(err);
+    });
 };
 
 module.exports = { getArticleById, patchArticleById };
