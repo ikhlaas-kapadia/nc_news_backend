@@ -21,12 +21,16 @@ const fetchArticleById = articleId => {
 };
 
 const updateArticleById = (articleId, voteChange) => {
-  console.log(voteChange, "from model");
+  const { inc_votes } = voteChange;
+
   return connection("articles")
-    .where("article_id", articleId)
-    .update()
-    .then(test => {
-      console.log(test, "from model");
+    .where("article_id", "=", articleId)
+    .increment("votes", inc_votes)
+    .then(() => {
+      return connection("articles").where("article_id", "=", articleId);
+    })
+    .then(updatedArticle => {
+      return { article: updatedArticle[0] };
     });
 };
 

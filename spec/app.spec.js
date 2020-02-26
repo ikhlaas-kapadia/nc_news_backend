@@ -97,7 +97,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it.only("GET - 200, responds with updated article when passed request object with votes", () => {
+      it("GET - 200, responds with updated article when passed request object with votes", () => {
         return request(app)
           .patch("/api/articles/1")
           .send({ inc_votes: 1 })
@@ -110,8 +110,7 @@ describe("/api", () => {
               "votes",
               "topic",
               "author",
-              "created_at",
-              "comment_count"
+              "created_at"
             ]);
           });
       });

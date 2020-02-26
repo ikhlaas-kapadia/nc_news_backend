@@ -18,7 +18,8 @@ const patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
 
   updateArticleById(article_id, req.body).then(updatedArticle => {
-    console.log(updatedArticle);
+    console.log(updatedArticle, "from controller");
+    res.status(200).send(updatedArticle);
   });
 };
 
