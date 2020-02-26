@@ -181,7 +181,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("ID not found");
           });
       });
-      it("POST - 400, responds with Invalid input", () => {
+      it("POST - 400, responds with Invalid input when request object to post in empty", () => {
         return request(app)
           .post("/api/articles/1/comments")
           .send({})
@@ -191,7 +191,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("POST - 400, responds with Invalid input", () => {
+      it("POST - 400, responds with Invalid input when article id is not valid", () => {
         return request(app)
           .post("/api/articles/chutya/comments")
           .send({ username: "butter_bridge", body: "test comment" })
