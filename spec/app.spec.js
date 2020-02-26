@@ -122,6 +122,14 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Article ID does not exist");
           });
       });
+      it.only("PATCH - 400, responds with Invalid Input", () => {
+        return request(app)
+          .patch("/api/articles/dhdhdh")
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
     });
   });
 });
