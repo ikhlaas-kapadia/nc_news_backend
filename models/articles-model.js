@@ -1,7 +1,6 @@
 const connection = require("../db/connection");
 
 const fetchArticleById = articleId => {
-  console.log(articleId, "from models");
   return connection
     .select("articles.*")
     .from("articles")
@@ -10,7 +9,14 @@ const fetchArticleById = articleId => {
     .where("articles.article_id", articleId)
     .count({ comment_count: "comments.article_id" })
     .then(result => {
-      return { article: result[0] };
+      if (result.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Article ID does not exist"
+        });
+      } else {
+        return { article: result[0] };
+      }
     });
 };
 

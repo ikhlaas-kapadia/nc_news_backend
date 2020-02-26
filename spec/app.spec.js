@@ -31,7 +31,6 @@ describe("/api", () => {
         .get("/api/chickenwings")
         .expect(404)
         .then(res => {
-          console.log(res.body, "from test file");
           expect(res.body.msg).to.equal("Invalid Path");
         });
     });
@@ -61,7 +60,7 @@ describe("/api", () => {
       });
     });
   });
-  describe.only("/articles", () => {
+  describe("/articles", () => {
     describe("/:article_id", () => {
       it("GET - 200, responds with an article object", () => {
         return request(app)
@@ -78,6 +77,24 @@ describe("/api", () => {
               "created_at",
               "comment_count"
             ]);
+          });
+      });
+    });
+    describe("/:article_id", () => {
+      it("GET - 404, responds with Article ID does not exist", () => {
+        return request(app)
+          .get("/api/articles/999")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("Article ID does not exist");
+          });
+      });
+      it("GET - 400, responds with invalid data type", () => {
+        return request(app)
+          .get("/api/articles/jsjsjs")
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid Input");
           });
       });
     });
