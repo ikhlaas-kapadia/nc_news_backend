@@ -22,23 +22,26 @@ const fetchArticleById = articleId => {
 
 const updateArticleById = (articleId, voteChange) => {
   const { inc_votes } = voteChange;
-
-  return connection("articles")
-    .where("article_id", "=", articleId)
-    .increment("votes", inc_votes)
-    .then(() => {
-      return connection("articles").where("article_id", "=", articleId);
-    })
-    .then(updatedArticle => {
-      if (updatedArticle.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: "Article ID does not exist"
-        });
-      } else {
-        return { article: updatedArticle[0] };
-      }
-    });
+  if (Object.keys(voteChange).length === 0) {
+    return Promise.reject({ status: 400, msg: "Invalid request format" });
+  } else {
+    return connection("articles")
+      .where("article_id", "=", articleId)
+      .increment("votes", inc_votes)
+      .then(() => {
+        return connection("articles").where("article_id", "=", articleId);
+      })
+      .then(updatedArticle => {
+        if (updatedArticle.length === 0) {
+          return Promise.reject({
+            status: 404,
+            msg: "Article ID does not exist"
+          });
+        } else {
+          return { article: updatedArticle[0] };
+        }
+      });
+  }
 };
 
 module.exports = { fetchArticleById, updateArticleById };

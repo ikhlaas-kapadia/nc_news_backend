@@ -79,8 +79,7 @@ describe("/api", () => {
             ]);
           });
       });
-    });
-    describe("/:article_id", () => {
+
       it("GET - 404, responds with Article ID does not exist", () => {
         return request(app)
           .get("/api/articles/999")
@@ -117,16 +116,47 @@ describe("/api", () => {
       it("PATCH - 404, responds with Article ID does not exist to update", () => {
         return request(app)
           .patch("/api/articles/999")
+          .send({ inc_votes: 1 })
           .expect(404)
           .then(res => {
             expect(res.body.msg).to.equal("Article ID does not exist");
           });
       });
-      it.only("PATCH - 400, responds with Invalid Input", () => {
+      it("PATCH - 400, responds with Invalid Input when user Id is a string", () => {
         return request(app)
           .patch("/api/articles/dhdhdh")
+          .send({ inc_votes: 1 })
           .expect(400)
           .then(res => {
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("PATCH - 400, responds with Invalid request format when request is empty", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid request format");
+          });
+      });
+      it("PATCH - 400, responds with Invalid Input, when request object is not a number", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: "cats" })
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("PATCH - 400, responds with Invalid Input, when request object has extra keys", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: "cats", name: "mitch" })
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
