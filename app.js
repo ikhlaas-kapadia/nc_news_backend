@@ -7,6 +7,7 @@ const {
   handlePsqlError
 } = require("./errors/errors");
 
+app.use(express.json());
 app.use("/api", apiRouter);
 app.use("/*", handle404s);
 app.use(handleCustomError);

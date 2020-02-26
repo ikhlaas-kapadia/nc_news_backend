@@ -97,6 +97,43 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
+      it.only("GET - 200, responds with updated article when passed request object with votes", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(res => {
+            expect(res.body.article).to.have.all.keys([
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "author",
+              "created_at",
+              "comment_count"
+            ]);
+          });
+      });
     });
   });
 });
+
+// describe('/:treasure_id', () => {
+//   it('PATCH: 200 Responds with updated item.', () => {
+//       return request(app)
+//           .patch('/api/treasures/20')
+//           .send({ cost_at_auction: "999.00" })
+//           .expect(200)
+//           .then(res => {
+//               expect(res.body.treasure).to.be.an('Array')
+//               expect(res.body.treasure[0]).to.eql({
+//                   treasure_id: 20,
+//                   treasure_name: 'treasure-s',
+//                   colour: 'silver',
+//                   age: 9,
+//                   cost_at_auction: '999.00',
+//                   shop_id: 3
+//               })
+//           });
+//   });

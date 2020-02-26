@@ -1,4 +1,8 @@
-const { fetchArticleById } = require("../models/articles-model");
+const {
+  fetchArticleById,
+  updateArticleById
+} = require("../models/articles-model");
+
 const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   fetchArticleById(article_id)
@@ -10,4 +14,12 @@ const getArticleById = (req, res, next) => {
     });
 };
 
-module.exports = { getArticleById };
+const patchArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+
+  updateArticleById(article_id, req.body).then(updatedArticle => {
+    console.log(updatedArticle);
+  });
+};
+
+module.exports = { getArticleById, patchArticleById };

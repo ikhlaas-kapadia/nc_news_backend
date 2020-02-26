@@ -20,7 +20,17 @@ const fetchArticleById = articleId => {
     });
 };
 
-module.exports = { fetchArticleById };
+const updateArticleById = (articleId, voteChange) => {
+  console.log(voteChange, "from model");
+  return connection("articles")
+    .where("article_id", articleId)
+    .update()
+    .then(test => {
+      console.log(test, "from model");
+    });
+};
+
+module.exports = { fetchArticleById, updateArticleById };
 // func = () => {
 //   return knex
 //     .select("houses.*")
