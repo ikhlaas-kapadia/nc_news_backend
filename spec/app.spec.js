@@ -191,14 +191,21 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("POST - 400, responds with Invalid input when article id is not valid", () => {
+      it.only("GET - 200, responds with an array of comments by article_id", () => {
         return request(app)
-          .post("/api/articles/chutya/comments")
-          .send({ username: "butter_bridge", body: "test comment" })
-          .expect(400)
+          .get("/api/articles/1/comments")
+          .expect(200)
           .then(res => {
-            //ask tutors as directing through same psql error
-            expect(res.body.msg).to.equal("Invalid Input");
+            console.log(res.body.comments, "error file");
+            res.body.comments.forEach(comment => {
+              expect(comment).to.have.all.keys([
+                "comment_id",
+                "votes",
+                "created_at",
+                "author",
+                "body"
+              ]);
+            });
           });
       });
     });
