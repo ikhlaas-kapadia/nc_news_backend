@@ -160,7 +160,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it.only("POST - 201, responds with posted comment", () => {
+      it("POST - 201, responds with posted comment", () => {
         return request(app)
           .post("/api/articles/1/comments")
           .send({ username: "butter_bridge", body: "test comment" })
@@ -169,6 +169,36 @@ describe("/api", () => {
             console.log(res.body.comment.body, "from test file");
             //ask tutors as directing through same psql error
             expect(res.body.comment.body).to.equal("test comment");
+          });
+      });
+      it("POST - 404, responds with Invalid article ID when endpoint has invalid article id", () => {
+        return request(app)
+          .post("/api/articles/9999/comments")
+          .send({ username: "butter_bridge", body: "test comment" })
+          .expect(404)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("ID not found");
+          });
+      });
+      it("POST - 400, responds with Invalid input", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({})
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("POST - 400, responds with Invalid input", () => {
+        return request(app)
+          .post("/api/articles/chutya/comments")
+          .send({ username: "butter_bridge", body: "test comment" })
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("Invalid Input");
           });
       });
     });
