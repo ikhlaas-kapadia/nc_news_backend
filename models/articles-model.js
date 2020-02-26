@@ -45,11 +45,3 @@ const updateArticleById = (articleId, voteChange) => {
 };
 
 module.exports = { fetchArticleById, updateArticleById };
-// func = () => {
-//   return knex
-//     .select("houses.*")
-//     .from("houses")
-//     .leftJoin("wizards", "houses.house_id", "=", "wizards.house_id")
-//     .groupBy("houses.house_id")
-//     .count({ wizards_count: "wizards.house_id" });
-// };

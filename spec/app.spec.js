@@ -160,6 +160,17 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
+      it.only("POST - 201, responds with posted comment", () => {
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send({ username: "butter_bridge", body: "test comment" })
+          .expect(201)
+          .then(res => {
+            console.log(res.body.comment.body, "from test file");
+            //ask tutors as directing through same psql error
+            expect(res.body.comment.body).to.equal("test comment");
+          });
+      });
     });
   });
 });

@@ -1,6 +1,7 @@
 const {
   fetchArticleById,
-  updateArticleById
+  updateArticleById,
+  insertComments
 } = require("../models/articles-model");
 
 const getArticleById = (req, res, next) => {
