@@ -20,11 +20,9 @@ const patchArticleById = (req, res, next) => {
 
   updateArticleById(article_id, req.body)
     .then(updatedArticle => {
-      console.log(updatedArticle);
       res.status(200).send(updatedArticle);
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 };

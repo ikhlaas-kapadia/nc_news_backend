@@ -4,6 +4,8 @@ const app = require("../app");
 const { expect } = require("chai");
 const request = require("supertest");
 const connection = require("../db/connection");
+const chai = require("chai");
+chai.use(require("sams-chai-sorted"));
 
 describe("/api", () => {
   //after: destroy connection to DB
@@ -160,90 +162,133 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("POST - 201, responds with posted comment", () => {
-        return request(app)
-          .post("/api/articles/1/comments")
-          .send({ username: "butter_bridge", body: "test comment" })
-          .expect(201)
-          .then(res => {
-            console.log(res.body.comment.body, "from test file");
-            //ask tutors as directing through same psql error
-            expect(res.body.comment.body).to.equal("test comment");
-          });
-      });
-      it("POST - 404, responds with Invalid article ID when endpoint has invalid article id", () => {
-        return request(app)
-          .post("/api/articles/9999/comments")
-          .send({ username: "butter_bridge", body: "test comment" })
-          .expect(404)
-          .then(res => {
-            //ask tutors as directing through same psql error
-            expect(res.body.msg).to.equal("ID not found");
-          });
-      });
-      it("POST - 400, responds with Invalid input when request object to post in empty", () => {
-        return request(app)
-          .post("/api/articles/1/comments")
-          .send({})
-          .expect(400)
-          .then(res => {
-            //ask tutors as directing through same psql error
-            expect(res.body.msg).to.equal("Invalid Input");
-          });
-      });
-      it("GET - 200, responds with an array of comments by article_id", () => {
-        return request(app)
-          .get("/api/articles/1/comments")
-          .expect(200)
-          .then(res => {
-            console.log(res.body.comments, "error file");
-            res.body.comments.forEach(comment => {
-              expect(comment).to.have.all.keys([
-                "comment_id",
-                "votes",
-                "created_at",
-                "author",
-                "body"
-              ]);
+      describe("/:article_id/comments", () => {
+        it("POST - 201, responds with posted comment", () => {
+          return request(app)
+            .post("/api/articles/1/comments")
+            .send({ username: "butter_bridge", body: "test comment" })
+            .expect(201)
+            .then(res => {
+              //ask tutors as directing through same psql error
+              expect(res.body.comment.body).to.equal("test comment");
             });
-            expect(res.body.comments).to.be.an("array");
-          });
+        });
+        it("POST - 404, responds with Invalid article ID when endpoint has invalid article id", () => {
+          return request(app)
+            .post("/api/articles/9999/comments")
+            .send({ username: "butter_bridge", body: "test comment" })
+            .expect(404)
+            .then(res => {
+              //ask tutors as directing through same psql error
+              expect(res.body.msg).to.equal("ID not found");
+            });
+        });
+        it("POST - 400, responds with Invalid input when request object to post in empty", () => {
+          return request(app)
+            .post("/api/articles/1/comments")
+            .send({})
+            .expect(400)
+            .then(res => {
+              //ask tutors as directing through same psql error
+              expect(res.body.msg).to.equal("Invalid Input");
+            });
+        });
+        it("GET - 200, responds with an array of comments by article_id", () => {
+          return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(res => {
+              res.body.comments.forEach(comment => {
+                expect(comment).to.have.all.keys([
+                  "comment_id",
+                  "votes",
+                  "created_at",
+                  "author",
+                  "body"
+                ]);
+              });
+              expect(res.body.comments).to.be.an("array");
+              expect(res.body.comments).to.be.sortedBy("created_at", {
+                descending: true
+              });
+            });
+        });
+        it("GET - 404, responds with ID not found when ID does not exist", () => {
+          return request(app)
+            .get("/api/articles/999/comments")
+            .expect(404)
+            .then(res => {
+              expect(res.body.msg).to.equal("ID not found");
+            });
+        });
+        it("GET - 400, responds Invalid Input when id is a string", () => {
+          return request(app)
+            .get("/api/articles/hello/comments")
+            .expect(400)
+            .then(res => {
+              expect(res.body.msg).to.equal("Invalid Input");
+            });
+        });
       });
-      it("GET - 404, responds with ID not found when ID does not exist", () => {
-        return request(app)
-          .get("/api/articles/999/comments")
-          .expect(404)
-          .then(res => {
-            expect(res.body.msg).to.equal("ID not found");
-          });
-      });
-      it("GET - 400, responds Invalid Input when id is a string", () => {
-        return request(app)
-          .get("/api/articles/hello/comments")
-          .expect(400)
-          .then(res => {
-            expect(res.body.msg).to.equal("Invalid Input");
-          });
+      describe("/comments?sort_by=column", () => {
+        it("GET-200, responds with comments sorted in descending order by default when order not specified", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=created_at")
+            .expect(200)
+            .then(res => {
+              res.body.comments.forEach(comment => {
+                expect(comment).to.have.all.keys([
+                  "comment_id",
+                  "votes",
+                  "created_at",
+                  "author",
+                  "body"
+                ]);
+              });
+              expect(res.body.comments).to.be.sortedBy("created_at", {
+                descending: true
+              });
+            });
+        });
+        it("GET-200, responds with comments sorted by column created_at by default when sortBy not specified", () => {
+          return request(app)
+            .get("/api/articles/1/comments?order=asc")
+            .expect(200)
+            .then(res => {
+              res.body.comments.forEach(comment => {
+                expect(comment).to.have.all.keys([
+                  "comment_id",
+                  "votes",
+                  "created_at",
+                  "author",
+                  "body"
+                ]);
+              });
+              expect(res.body.comments).to.be.sortedBy("created_at", {
+                descending: false
+              });
+            });
+        });
+        it("GET-200, responds with comments sorted by column votes in descending order when order not specified", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=votes")
+            .expect(200)
+            .then(res => {
+              res.body.comments.forEach(comment => {
+                expect(comment).to.have.all.keys([
+                  "comment_id",
+                  "votes",
+                  "created_at",
+                  "author",
+                  "body"
+                ]);
+              });
+              expect(res.body.comments).to.be.sortedBy("votes", {
+                descending: true
+              });
+            });
+        });
       });
     });
   });
 });
-
-// describe('/:treasure_id', () => {
-//   it('PATCH: 200 Responds with updated item.', () => {
-//       return request(app)
-//           .patch('/api/treasures/20')
-//           .send({ cost_at_auction: "999.00" })
-//           .expect(200)
-//           .then(res => {
-//               expect(res.body.treasure).to.be.an('Array')
-//               expect(res.body.treasure[0]).to.eql({
-//                   treasure_id: 20,
-//                   treasure_name: 'treasure-s',
-//                   colour: 'silver',
-//                   age: 9,
-//                   cost_at_auction: '999.00',
-//                   shop_id: 3
-//               })
-//           });
-//   });

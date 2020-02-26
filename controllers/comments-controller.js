@@ -9,24 +9,22 @@ const postComments = (req, res, next) => {
 
   insertComments(article_id, username, body)
     .then(comments => {
-      console.log(comments);
       res.status(201).send(comments);
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 };
 
 const getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsById(article_id)
+  const { sort_by, order } = req.query;
+
+  fetchCommentsById(article_id, sort_by, order)
     .then(comments => {
-      // console.log(comments);
       res.status(200).send(comments);
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 };
