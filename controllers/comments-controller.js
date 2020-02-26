@@ -20,10 +20,15 @@ const postComments = (req, res, next) => {
 
 const getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsById(article_id).then(comments => {
-    // console.log(comments);
-    res.status(200).send(comments);
-  });
+  fetchCommentsById(article_id)
+    .then(comments => {
+      // console.log(comments);
+      res.status(200).send(comments);
+    })
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
 };
 
 module.exports = { postComments, getCommentsById };

@@ -15,6 +15,10 @@ const fetchCommentsById = articleId => {
     .from("comments")
     .where({ article_id: articleId })
     .then(comments => {
+      if (comments.length === 0) {
+        return Promise.reject({ status: 404, msg: "ID not found" });
+      }
+      console.log(comments);
       return { comments: comments };
     });
 };

@@ -191,7 +191,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it.only("GET - 200, responds with an array of comments by article_id", () => {
+      it("GET - 200, responds with an array of comments by article_id", () => {
         return request(app)
           .get("/api/articles/1/comments")
           .expect(200)
@@ -206,6 +206,15 @@ describe("/api", () => {
                 "body"
               ]);
             });
+            expect(res.body.comments).to.be.an("array");
+          });
+      });
+      it("GET - 404, responds with ID not found when ID does not exist", () => {
+        return request(app)
+          .get("/api/articles/999/comments")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("ID not found");
           });
       });
     });
