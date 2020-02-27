@@ -1,7 +1,8 @@
 const {
   insertComments,
   fetchCommentsById,
-  updateComment
+  updateComment,
+  removeComment
 } = require("../models/comments-model");
 
 const postComments = (req, res, next) => {
@@ -46,4 +47,19 @@ const patchComment = (req, res, next) => {
     });
 };
 
-module.exports = { postComments, getCommentsById, patchComment };
+const deleteComment = (req, res, next) => {
+  // console.log(req.params);
+  const { comment_id } = req.params;
+  removeComment(comment_id)
+    .then(deletedComment => {
+      // console.log(deletedComment);
+      //We send empty () so that the promise can be resolved.
+      res.status(204).send();
+    })
+    .catch(err => {
+      // console.log(err);
+      next(err);
+    });
+};
+
+module.exports = { postComments, getCommentsById, patchComment, deleteComment };

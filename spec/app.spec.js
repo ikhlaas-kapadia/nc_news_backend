@@ -438,7 +438,7 @@ describe("/api", () => {
       });
     });
   });
-  describe.only("/comments", () => {
+  describe("/comments", () => {
     describe("/:comment_id", () => {
       it("PATCH-200,responds with updated comment when passed request object with votes ", () => {
         return request(app)
@@ -503,6 +503,21 @@ describe("/api", () => {
             //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
+      });
+      it("DEL- 204, responds with no content when deleting comment", () => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(204);
+      });
+      it("DEL- 404, responds with 404 when Id does not exist", () => {
+        return request(app)
+          .delete("/api/comments/999")
+          .expect(404);
+      });
+      it("DEL- 400, responds with 400 invalid id type", () => {
+        return request(app)
+          .delete("/api/comments/hhsh")
+          .expect(400);
       });
     });
   });
