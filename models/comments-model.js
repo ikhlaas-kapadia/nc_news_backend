@@ -21,7 +21,6 @@ const fetchCommentsById = (
       .where({ article_id: articleId })
       .orderBy(sortBy, order)
       .then(comments => {
-        console.log(comments, "from model");
         if (comments.length === 0) {
           return connection
             .select("article_id")
@@ -45,7 +44,7 @@ const fetchCommentsById = (
 
 const updateComment = (commentId, voteChange) => {
   const { inc_votes } = voteChange;
-  console.log(voteChange);
+
   if (Object.keys(voteChange).length === 0) {
     return Promise.reject({ status: 400, msg: "Invalid request format" });
   } else {

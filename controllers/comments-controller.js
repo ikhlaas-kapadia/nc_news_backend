@@ -24,19 +24,15 @@ const getCommentsById = (req, res, next) => {
 
   fetchCommentsById(article_id, sort_by, order)
     .then(comments => {
-      // console.log(comments, "from controller");
       res.status(200).send(comments);
     })
     .catch(err => {
-      // console.log(err, "from controller");
       next(err);
     });
 };
 
 const patchComment = (req, res, next) => {
   const { comment_id } = req.params;
-
-  console.log();
 
   updateComment(comment_id, req.body)
     .then(updatedComment => {
@@ -48,16 +44,13 @@ const patchComment = (req, res, next) => {
 };
 
 const deleteComment = (req, res, next) => {
-  // console.log(req.params);
   const { comment_id } = req.params;
   removeComment(comment_id)
     .then(deletedComment => {
-      // console.log(deletedComment);
       //We send empty () so that the promise can be resolved.
       res.status(204).send();
     })
     .catch(err => {
-      // console.log(err);
       next(err);
     });
 };

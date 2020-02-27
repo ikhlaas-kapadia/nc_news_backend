@@ -410,6 +410,15 @@ describe("/api", () => {
             });
           });
       });
+      it("GET - 200,responds with an array of articles in an object sorted by author when author has no article", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an("array");
+            expect(res.body.articles.length).to.equal(0);
+          });
+      });
       it("GET - 200,responds with an array of articles in an object sorted by topic", () => {
         return request(app)
           .get("/api/articles?topic=mitch")
@@ -420,20 +429,29 @@ describe("/api", () => {
             });
           });
       });
-      it("GET - 404,responds with topic does not exist if no article with specified topic", () => {
+      it("GET - 200,responds with an array of articles in an object sorted by topic when topic exists but without article", () => {
+        return request(app)
+          .get("/api/articles?topic=paper")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.an("array");
+            expect(res.body.articles.length).to.equal(0);
+          });
+      });
+      it("GET - 404,responds with topic does not exist if no article with specified topic and the topic does not exist", () => {
         return request(app)
           .get("/api/articles?topic=hello")
           .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal("topic does not exist");
+            expect(res.body.msg).to.equal("Does not exist");
           });
       });
-      it("GET - 404,responds with author does not exist if no article with specified author", () => {
+      it("GET - 404,responds with author does not exist if no article with specified author and the author does not exist", () => {
         return request(app)
           .get("/api/articles?author=hello")
           .expect(404)
           .then(res => {
-            expect(res.body.msg).to.equal("author does not exist");
+            expect(res.body.msg).to.equal("Does not exist");
           });
       });
     });
@@ -446,7 +464,6 @@ describe("/api", () => {
           .send({ inc_votes: 1 })
           .expect(200)
           .then(res => {
-            console.log(res.body.comment);
             expect(res.body.comment).to.have.all.keys([
               "comment_id",
               "author",

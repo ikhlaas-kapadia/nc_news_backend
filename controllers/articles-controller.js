@@ -29,11 +29,10 @@ const patchArticleById = (req, res, next) => {
 
 const getArticles = (req, res, next) => {
   const { sort_by, order, author, topic } = req.query;
-  // console.log(sort_by, "in controller");
+
   fetchArticles(sort_by, order, author, topic)
     .then(articles => {
       res.status(200).send(articles);
-      console.log(articles, "from controller");
     })
     .catch(err => {
       next(err);

@@ -1,10 +1,11 @@
+const connection = require("../connection");
 exports.formatDates = list => {
   const newList = [...list].map(item => {
     const newItem = { ...item };
     newItem.created_at = new Date(newItem.created_at);
     return newItem;
   });
-  // console.log(newList);
+
   return newList;
 };
 
@@ -30,14 +31,15 @@ exports.formatComments = (comments, articleRef) => {
   return formattedComments;
 };
 
-// exports.checkExists=(table, column, value)=>{
-//   return connection
-//   .select("*")
-//   .from("topics")
-//   .where("topic", value)
-//   .then(articleTopic => {
-//     console.log(articleTopic, "****");
-//     if (articleTopic.length === 0) {
-// return false
-//     } else return true
-// }
+exports.checkExists = (table, column, value) => {
+  return connection
+    .select("*")
+    .from(table)
+    .where(column, value)
+    .then(result => {
+      // console.log(result, "****");
+      if (result.length === 0) {
+        return false;
+      } else return true;
+    });
+};

@@ -1,5 +1,10 @@
 const { expect } = require("chai");
-const { formatDates, makeRefObj, formatComments } = require("../utils");
+const {
+  formatDates,
+  makeRefObj,
+  formatComments,
+  checkExists
+} = require("../utils");
 
 describe("formatDates", () => {
   it("returns an empty array when passed an empty array", () => {
@@ -54,7 +59,7 @@ describe("makeRefObj", () => {
   });
 });
 
-describe.only("formatComments", () => {
+describe("formatComments", () => {
   it("returns a new array when passed empty array", () => {
     const input = [];
     const ref = {};
@@ -86,4 +91,8 @@ describe.only("formatComments", () => {
     expect(formatComments(input, ref)).to.eql(output);
     expect(input).to.not.equal(output);
   });
+});
+
+describe("checkExists", () => {
+  it("returns true or false if an array is empty", () => {});
 });

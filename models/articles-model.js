@@ -1,5 +1,5 @@
 const connection = require("../db/connection");
-
+const { checkExists } = require("../db/utils/utils");
 const fetchArticleById = articleId => {
   return connection
     .select("articles.*")
@@ -50,7 +50,14 @@ const fetchArticles = (
   author,
   topic
 ) => {
-  console.log(order);
+  let table = "topics";
+  let column = "slug";
+  let value = topic;
+  if (!topic) {
+    table = "users";
+    (column = "username"), (value = author);
+  }
+
   if (order === "asc" || order === "desc" || order === undefined) {
     return (
       connection
@@ -81,22 +88,16 @@ const fetchArticles = (
         .count({ comment_count: "comments.article_id" })
         .then(formattedArticles => {
           if (formattedArticles.length === 0) {
-            console.log(formattedArticles, "---->");
-            return connection
-              .select("*")
-              .from("topics")
-              .where("topic", topic)
-              .then(articleTopic => {
-                console.log(articleTopic, "****");
-                if (articleTopic.length === 0) {
-                  return Promise.reject({
-                    status: 404,
-                    msg: "topic does not exist"
-                  });
-                } else {
-                  return { articles: formattedArticles };
-                }
-              });
+            return checkExists(table, column, value).then(funcres => {
+              if (funcres) {
+                return { articles: formattedArticles };
+              } else {
+                return Promise.reject({
+                  status: 404,
+                  msg: "Does not exist"
+                });
+              }
+            });
           } else {
             return { articles: formattedArticles };
           }
@@ -108,25 +109,3 @@ const fetchArticles = (
 };
 
 module.exports = { fetchArticleById, updateArticleById, fetchArticles };
-
-// .modify(queryBuilder => {
-//   if (house_id !== undefined) {
-//     queryBuilder.where("houses.house_id", house_id);
-//   }
-// })
-
-// // console.log(comments, "from model");
-// if (comments.length === 0) {
-//   return connection
-//     .select("article_id")
-//     .from("articles")
-//     .where({ article_id: articleId })
-//     .then(article => {
-//       if (article.length === 0) {
-//         return Promise.reject({ status: 404, msg: "ID not found" });
-//       } else {
-//         return { comments: comments };
-//       }
-//     });
-// } else {
-//   return { comments: comments };
