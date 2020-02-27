@@ -333,7 +333,7 @@ describe("/api", () => {
         });
         it("GET-200, responds with empty array when article id exists but has no comments", () => {
           return request(app)
-            .get("/api/articles/2/comments?sort_by=created_at&&order=desc")
+            .get("/api/articles/2/comments")
             .expect(200)
             .then(res => {
               expect(res.body.comments).to.be.an("array");
@@ -359,6 +359,81 @@ describe("/api", () => {
                 "comment_count"
               ]);
             });
+          });
+      });
+      it("GET - GET - 200,responds with an array of articles sorted by created_at column in desc order by default", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
+          });
+      });
+      it("GET - GET - 200,responds with an array of articles in an object sorted by specified column and order", () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes&&order=asc")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.sortedBy("votes", {
+              descending: false
+            });
+          });
+      });
+      it("GET-400, responds with Invalid query when query sortis not a valid column", () => {
+        return request(app)
+          .get("/api/articles?sort_by=points")
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.be.equal("Invalid query");
+          });
+      });
+      it("GET-400, responds with Invalid order query when query order is not a valid order type", () => {
+        return request(app)
+          .get("/api/articles?order=banana")
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.be.equal("Invalid order query");
+          });
+      });
+      it("GET - 200,responds with an array of articles in an object sorted by author", () => {
+        return request(app)
+          .get("/api/articles?author=butter_bridge")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
+            res.body.articles.forEach(article => {
+              expect(article.author).to.equal("butter_bridge");
+            });
+          });
+      });
+      it("GET - 200,responds with an array of articles in an object sorted by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(res => {
+            res.body.articles.forEach(article => {
+              expect(article.topic).to.equal("mitch");
+            });
+          });
+      });
+      it("GET - 404,responds with topic does not exist if no article with specified topic", () => {
+        return request(app)
+          .get("/api/articles?topic=hello")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("topic does not exist");
+          });
+      });
+      it("GET - 404,responds with author does not exist if no article with specified author", () => {
+        return request(app)
+          .get("/api/articles?author=hello")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("author does not exist");
           });
       });
     });
