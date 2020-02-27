@@ -342,7 +342,7 @@ describe("/api", () => {
         });
       });
     });
-    describe.only("/", () => {
+    describe("/", () => {
       it("GET - 200,responds with an array of articles in articles object", () => {
         return request(app)
           .get("/api/articles")
@@ -434,6 +434,74 @@ describe("/api", () => {
           .expect(404)
           .then(res => {
             expect(res.body.msg).to.equal("author does not exist");
+          });
+      });
+    });
+  });
+  describe.only("/comments", () => {
+    describe("/:comment_id", () => {
+      it("PATCH-200,responds with updated comment when passed request object with votes ", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(res => {
+            console.log(res.body.comment);
+            expect(res.body.comment).to.have.all.keys([
+              "comment_id",
+              "author",
+              "article_id",
+              "votes",
+              "body",
+              "created_at"
+            ]);
+          });
+      });
+      it("PATCH - 404, responds with comment ID does not exist to update", () => {
+        return request(app)
+          .patch("/api/comments/999")
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("Comment ID does not exist");
+          });
+      });
+      it("PATCH - 400, responds with Invalid Input when comment id is a string", () => {
+        return request(app)
+          .patch("/api/comments/dhdhdh")
+          .send({ inc_votes: 1 })
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("PATCH - 400, responds with Invalid request format when request is empty", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({})
+          .expect(400)
+          .then(res => {
+            expect(res.body.msg).to.equal("Invalid request format");
+          });
+      });
+      it("PATCH - 400, responds with Invalid Input, when request object is not a number", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: "cats" })
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("PATCH - 400, responds with Invalid Input, when request object has extra keys", () => {
+        return request(app)
+          .patch("/api/comments/1")
+          .send({ inc_votes: "cats", name: "mitch" })
+          .expect(400)
+          .then(res => {
+            //ask tutors as directing through same psql error
+            expect(res.body.msg).to.equal("Invalid Input");
           });
       });
     });

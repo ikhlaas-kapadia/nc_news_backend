@@ -29,3 +29,15 @@ exports.formatComments = (comments, articleRef) => {
 
   return formattedComments;
 };
+
+// exports.checkExists=(table, column, value)=>{
+//   return connection
+//   .select("*")
+//   .from("topics")
+//   .where("topic", value)
+//   .then(articleTopic => {
+//     console.log(articleTopic, "****");
+//     if (articleTopic.length === 0) {
+// return false
+//     } else return true
+// }

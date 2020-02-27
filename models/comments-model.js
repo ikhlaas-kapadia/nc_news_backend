@@ -21,7 +21,7 @@ const fetchCommentsById = (
       .where({ article_id: articleId })
       .orderBy(sortBy, order)
       .then(comments => {
-        // console.log(comments, "from model");
+        console.log(comments, "from model");
         if (comments.length === 0) {
           return connection
             .select("article_id")
@@ -42,11 +42,58 @@ const fetchCommentsById = (
     return Promise.reject({ status: 400, msg: "Invalid order query" });
   }
 };
-module.exports = { insertComments, fetchCommentsById };
+
+const updateComment = (commentId, voteChange) => {
+  const { inc_votes } = voteChange;
+  console.log(voteChange);
+  if (Object.keys(voteChange).length === 0) {
+    return Promise.reject({ status: 400, msg: "Invalid request format" });
+  } else {
+    return connection("comments")
+      .where("comment_id", "=", commentId)
+      .increment("votes", inc_votes)
+      .then(() => {
+        return connection("comments").where("comment_id", "=", commentId);
+      })
+      .then(updatedComment => {
+        if (updatedComment.length === 0) {
+          return Promise.reject({
+            status: 404,
+            msg: "Comment ID does not exist"
+          });
+        } else {
+          return { comment: updatedComment[0] };
+        }
+      });
+  }
+};
+module.exports = { insertComments, fetchCommentsById, updateComment };
 /*
 once empty array is returned
 we generate the table for artiles and check if valid id.
 select * from articles where articleid = id
 */
 
-describe("", () => {});
+// const updateArticleById = (articleId, voteChange) => {
+//   const { inc_votes } = voteChange;
+//   if (Object.keys(voteChange).length === 0) {
+//     return Promise.reject({ status: 400, msg: "Invalid request format" });
+//   } else {
+//     return connection("articles")
+//       .where("article_id", "=", articleId)
+//       .increment("votes", inc_votes)
+//       .then(() => {
+//         return connection("articles").where("article_id", "=", articleId);
+//       })
+//       .then(updatedArticle => {
+//         if (updatedArticle.length === 0) {
+//           return Promise.reject({
+//             status: 404,
+//             msg: "Article ID does not exist"
+//           });
+//         } else {
+//           return { article: updatedArticle[0] };
+//         }
+//       });
+//   }
+// };
