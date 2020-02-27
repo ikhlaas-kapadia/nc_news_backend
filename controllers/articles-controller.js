@@ -1,7 +1,7 @@
 const {
   fetchArticleById,
   updateArticleById,
-  insertComments
+  fetchArticles
 } = require("../models/articles-model");
 
 const getArticleById = (req, res, next) => {
@@ -27,4 +27,11 @@ const patchArticleById = (req, res, next) => {
     });
 };
 
-module.exports = { getArticleById, patchArticleById };
+const getArticles = (req, res, next) => {
+  fetchArticles().then(articles => {
+    res.status(200).send(articles);
+    console.log(articles, "from controller");
+  });
+};
+
+module.exports = { getArticleById, patchArticleById, getArticles };

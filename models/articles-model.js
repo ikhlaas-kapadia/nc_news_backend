@@ -44,4 +44,27 @@ const updateArticleById = (articleId, voteChange) => {
   }
 };
 
-module.exports = { fetchArticleById, updateArticleById };
+const fetchArticles = () => {
+  return (
+    connection
+      //articles.* is same as saying articles.article_id and all the other columns
+      //When joining tables we need to be explicit in specifcying columns. If we say article_id it doesn't know which table to reference from since we are joining tables
+      .select(
+        "articles.article_id",
+        "articles.title",
+        "articles.votes",
+        "articles.topic",
+        "articles.author",
+        "articles.created_at"
+      )
+      .from("articles")
+      .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
+      .groupBy("articles.article_id")
+      .count({ comment_count: "comments.article_id" })
+      .then(formattedArticles => {
+        return { articles: formattedArticles };
+      })
+  );
+};
+
+module.exports = { fetchArticleById, updateArticleById, fetchArticles };

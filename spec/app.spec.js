@@ -342,5 +342,25 @@ describe("/api", () => {
         });
       });
     });
+    describe.only("/", () => {
+      it("GET - 200,responds with an array of articles in articles object", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(res => {
+            res.body.articles.forEach(res => {
+              expect(res).to.have.all.keys([
+                "author",
+                "title",
+                "article_id",
+                "topic",
+                "created_at",
+                "votes",
+                "comment_count"
+              ]);
+            });
+          });
+      });
+    });
   });
 });
