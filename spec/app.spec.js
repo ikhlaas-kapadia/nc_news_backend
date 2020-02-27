@@ -307,6 +307,39 @@ describe("/api", () => {
               });
             });
         });
+        it("GET-400, responds with Invalid query when query string is not a valid column", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=points&&order=asc")
+            .expect(400)
+            .then(res => {
+              expect(res.body.msg).to.be.equal("Invalid query");
+            });
+        });
+        it("GET-400, responds with Invalid order query when query string is not a valid order type", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=votes&&order=banana")
+            .expect(400)
+            .then(res => {
+              expect(res.body.msg).to.be.equal("Invalid order query");
+            });
+        });
+        it("GET-404, responds with ID not found  when querying an invalid ID", () => {
+          return request(app)
+            .get("/api/articles/999/comments?sort_by=created_at&&order=desc")
+            .expect(404)
+            .then(res => {
+              expect(res.body.msg).to.equal("ID not found");
+            });
+        });
+        it("GET-200, responds with empty array when article id exists but has no comments", () => {
+          return request(app)
+            .get("/api/articles/2/comments?sort_by=created_at&&order=desc")
+            .expect(200)
+            .then(res => {
+              expect(res.body.comments).to.be.an("array");
+              expect(res.body.comments.length).to.equal(0);
+            });
+        });
       });
     });
   });

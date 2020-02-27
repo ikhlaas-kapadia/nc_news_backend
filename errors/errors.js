@@ -4,7 +4,7 @@ exports.handle404s = (req, res, next) => {
 };
 
 exports.handleCustomError = (err, req, res, next) => {
-  // console.log(err.status, "from error file");
+  console.log(err, "from error file");
   if (err.status === 404) {
     res.status(404).send({ msg: err.msg });
   } else if (err.status === 400) {
@@ -21,6 +21,8 @@ exports.handlePsqlError = (err, req, res, next) => {
     res.status(404).send({ msg: "ID not found" });
   } else if (err.code === "23502") {
     res.status(400).send({ msg: "Invalid Input" });
+  } else if (err.code === "42703") {
+    res.status(400).send({ msg: "Invalid query" });
   } else {
     next(err);
   }

@@ -22,9 +22,11 @@ const getCommentsById = (req, res, next) => {
 
   fetchCommentsById(article_id, sort_by, order)
     .then(comments => {
+      // console.log(comments, "from controller");
       res.status(200).send(comments);
     })
     .catch(err => {
+      // console.log(err, "from controller");
       next(err);
     });
 };
