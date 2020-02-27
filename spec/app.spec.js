@@ -288,6 +288,25 @@ describe("/api", () => {
               });
             });
         });
+        it("GET-200, responds with comments sorted by column votes and in ascending order when specified multiple queries", () => {
+          return request(app)
+            .get("/api/articles/1/comments?sort_by=votes&&order=asc")
+            .expect(200)
+            .then(res => {
+              res.body.comments.forEach(comment => {
+                expect(comment).to.have.all.keys([
+                  "comment_id",
+                  "votes",
+                  "created_at",
+                  "author",
+                  "body"
+                ]);
+              });
+              expect(res.body.comments).to.be.sortedBy("votes", {
+                descending: false
+              });
+            });
+        });
       });
     });
   });
