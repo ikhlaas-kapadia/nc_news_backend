@@ -27,3 +27,8 @@ exports.handlePsqlError = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.handle405s = (req, res, next) => {
+  res.status(405).send({ msg: "Method Not Allowed" });
+  next();
+};
