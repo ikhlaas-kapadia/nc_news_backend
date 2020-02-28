@@ -151,7 +151,6 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-
       it("PATCH - 400, responds with Invalid Input, when request object is not a number", () => {
         return request(app)
           .patch("/api/articles/1")
@@ -197,6 +196,16 @@ describe("/api", () => {
           return request(app)
             .post("/api/articles/1/comments")
             .send({})
+            .expect(400)
+            .then(res => {
+              //ask tutors as directing through same psql error
+              expect(res.body.msg).to.equal("Invalid Input");
+            });
+        });
+        it("POST - 400, responds with 400 when request body does not have all keys", () => {
+          return request(app)
+            .post("/api/articles/1/comments")
+            .send({ user: "butter_bridge", bod: "test comment" })
             .expect(400)
             .then(res => {
               //ask tutors as directing through same psql error

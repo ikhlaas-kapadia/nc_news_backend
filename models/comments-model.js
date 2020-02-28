@@ -1,12 +1,16 @@
 const connection = require("../db/connection");
 
 const insertComments = (articleId, username, commentBody) => {
-  return connection("comments")
-    .insert({ body: commentBody, author: username, article_id: articleId })
-    .returning("*")
-    .then(insertedComment => {
-      return { comment: insertedComment[0] };
-    });
+  if (username === undefined || commentBody === undefined) {
+    return Promise.reject({ status: 400, msg: "Invalid Input" });
+  } else {
+    return connection("comments")
+      .insert({ body: commentBody, author: username, article_id: articleId })
+      .returning("*")
+      .then(insertedComment => {
+        return { comment: insertedComment[0] };
+      });
+  }
 };
 
 const fetchCommentsById = (

@@ -14,6 +14,7 @@ const postComments = (req, res, next) => {
       res.status(201).send(comments);
     })
     .catch(err => {
+      console.log(err);
       next(err);
     });
 };
