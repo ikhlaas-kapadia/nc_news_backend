@@ -115,6 +115,24 @@ describe("/api", () => {
             ]);
           });
       });
+      it("PATCH - 200, responds with unchanged article when passed request object is empty", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({})
+          .expect(200)
+          .then(res => {
+            console.log(res.body);
+            expect(res.body.article).to.have.all.keys([
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "topic",
+              "author",
+              "created_at"
+            ]);
+          });
+      });
       it("PATCH - 404, responds with Article ID does not exist to update", () => {
         return request(app)
           .patch("/api/articles/999")
@@ -133,15 +151,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("PATCH - 400, responds with Invalid request format when request is empty", () => {
-        return request(app)
-          .patch("/api/articles/1")
-          .send({})
-          .expect(400)
-          .then(res => {
-            expect(res.body.msg).to.equal("Invalid request format");
-          });
-      });
+
       it("PATCH - 400, responds with Invalid Input, when request object is not a number", () => {
         return request(app)
           .patch("/api/articles/1")
