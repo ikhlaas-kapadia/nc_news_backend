@@ -47,28 +47,28 @@ const fetchCommentsById = (
 };
 
 const updateComment = (commentId, voteChange) => {
-  const { inc_votes } = voteChange;
+  let { inc_votes } = voteChange;
 
-  if (Object.keys(voteChange).length === 0) {
-    return Promise.reject({ status: 400, msg: "Invalid request format" });
-  } else {
-    return connection("comments")
-      .where("comment_id", "=", commentId)
-      .increment("votes", inc_votes)
-      .then(() => {
-        return connection("comments").where("comment_id", "=", commentId);
-      })
-      .then(updatedComment => {
-        if (updatedComment.length === 0) {
-          return Promise.reject({
-            status: 404,
-            msg: "Comment ID does not exist"
-          });
-        } else {
-          return { comment: updatedComment[0] };
-        }
-      });
+  if (inc_votes === undefined) {
+    inc_votes = 0;
   }
+  console.log(voteChange, inc_votes);
+  return connection("comments")
+    .where("comment_id", "=", commentId)
+    .increment("votes", inc_votes)
+    .then(() => {
+      return connection("comments").where("comment_id", "=", commentId);
+    })
+    .then(updatedComment => {
+      if (updatedComment.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Comment ID does not exist"
+        });
+      } else {
+        return { comment: updatedComment[0] };
+      }
+    });
 };
 
 const removeComment = id => {

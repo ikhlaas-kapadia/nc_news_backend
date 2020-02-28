@@ -511,13 +511,21 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
-      it("PATCH - 400, responds with Invalid request format when request is empty", () => {
+      it("PATCH - 200, responds with unchanged comment when inc_votes not in body", () => {
         return request(app)
           .patch("/api/comments/1")
           .send({})
-          .expect(400)
+          .expect(200)
           .then(res => {
-            expect(res.body.msg).to.equal("Invalid request format");
+            console.log(res.body.comment);
+            expect(res.body.comment).to.have.all.keys([
+              "comment_id",
+              "author",
+              "article_id",
+              "votes",
+              "body",
+              "created_at"
+            ]);
           });
       });
       it("PATCH - 400, responds with Invalid Input, when request object is not a number", () => {
