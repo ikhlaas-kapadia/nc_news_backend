@@ -5,12 +5,17 @@ const {
   patchArticleById,
   getArticles
 } = require("../controllers/articles-controller");
+const { handle405s } = require("../errors/errors");
 
 articlesRouter
   .route("/:article_id")
   .get(getArticleById)
-  .patch(patchArticleById);
-articlesRouter.route("/").get(getArticles);
+  .patch(patchArticleById)
+  .all(handle405s);
+articlesRouter
+  .route("/")
+  .get(getArticles)
+  .all(handle405s);
 
 articlesRouter.use(commentsRouter);
 

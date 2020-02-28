@@ -16,6 +16,14 @@ describe("/api", () => {
   beforeEach(() => {
     return connection.seed.run();
   });
+  it("DELETE - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+    return request(app)
+      .delete("/api")
+      .expect(405)
+      .then(res => {
+        expect(res.body.msg).to.equal("Method not allowed");
+      });
+  });
   describe("/topics", () => {
     it("GET - 200,responds with an array of topic objects", () => {
       return request(app)
@@ -34,6 +42,14 @@ describe("/api", () => {
         .expect(404)
         .then(res => {
           expect(res.body.msg).to.equal("Invalid Path");
+        });
+    });
+    it("PATCH - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+      return request(app)
+        .patch("/api/topics")
+        .expect(405)
+        .then(res => {
+          expect(res.body.msg).to.equal("Method not allowed");
         });
     });
   });
@@ -60,6 +76,14 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Invalid Username");
           });
       });
+      it("PUT - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+        return request(app)
+          .put("/api/users/1")
+          .expect(405)
+          .then(res => {
+            expect(res.body.msg).to.equal("Method not allowed");
+          });
+      });
     });
   });
   describe("/articles", () => {
@@ -69,6 +93,7 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(res => {
+            console.log(res.body);
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -96,6 +121,14 @@ describe("/api", () => {
           .expect(400)
           .then(res => {
             expect(res.body.msg).to.equal("Invalid Input");
+          });
+      });
+      it("GET - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+        return request(app)
+          .put("/api/articles/1")
+          .expect(405)
+          .then(res => {
+            expect(res.body.msg).to.equal("Method not allowed");
           });
       });
       it("PATCH - 200, responds with updated article when passed request object with votes", () => {
@@ -212,11 +245,20 @@ describe("/api", () => {
               expect(res.body.msg).to.equal("Invalid Input");
             });
         });
+        it("PUT - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+          return request(app)
+            .put("/api/articles/1/comments")
+            .expect(405)
+            .then(res => {
+              expect(res.body.msg).to.equal("Method not allowed");
+            });
+        });
         it("GET - 200, responds with an array of comments by article_id", () => {
           return request(app)
             .get("/api/articles/1/comments")
             .expect(200)
             .then(res => {
+              console.log(res.body);
               res.body.comments.forEach(comment => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
@@ -378,6 +420,14 @@ describe("/api", () => {
                 "comment_count"
               ]);
             });
+          });
+      });
+      it("PATCH - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+        return request(app)
+          .patch("/api/articles")
+          .expect(405)
+          .then(res => {
+            expect(res.body.msg).to.equal("Method not allowed");
           });
       });
       it("GET - GET - 200,responds with an array of articles sorted by created_at column in desc order by default", () => {
@@ -562,6 +612,14 @@ describe("/api", () => {
         return request(app)
           .delete("/api/comments/hhsh")
           .expect(400);
+      });
+      it("PUT - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
+        return request(app)
+          .put("/api/comments/1")
+          .expect(405)
+          .then(res => {
+            expect(res.body.msg).to.equal("Method not allowed");
+          });
       });
     });
   });

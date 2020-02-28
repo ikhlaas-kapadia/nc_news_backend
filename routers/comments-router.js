@@ -6,15 +6,18 @@ const {
   patchComment,
   deleteComment
 } = require("../controllers/comments-controller");
+const { handle405s } = require("../errors/errors");
 
 commentsRouter
   .route("/:article_id/comments")
   .post(postComments)
-  .get(getCommentsById);
+  .get(getCommentsById)
+  .all(handle405s);
 
 commentsRouter
   .route("/:comment_id")
   .patch(patchComment)
-  .delete(deleteComment);
+  .delete(deleteComment)
+  .all(handle405s);
 
 module.exports = commentsRouter;
