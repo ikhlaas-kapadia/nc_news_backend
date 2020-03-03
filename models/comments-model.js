@@ -52,7 +52,7 @@ const updateComment = (commentId, voteChange) => {
   if (inc_votes === undefined) {
     inc_votes = 0;
   }
-  console.log(voteChange, inc_votes);
+
   return connection("comments")
     .where("comment_id", "=", commentId)
     .increment("votes", inc_votes)

@@ -6,7 +6,6 @@ exports.up = function(knex) {
       .unique()
       .notNullable();
     topicsTable.string("description").notNullable();
-    // console.log(topicsTable);
   });
 };
 

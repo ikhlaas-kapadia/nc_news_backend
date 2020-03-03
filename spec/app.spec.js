@@ -93,7 +93,6 @@ describe("/api", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(res => {
-            console.log(res.body);
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -154,7 +153,6 @@ describe("/api", () => {
           .send({})
           .expect(200)
           .then(res => {
-            console.log(res.body);
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -258,7 +256,6 @@ describe("/api", () => {
             .get("/api/articles/1/comments")
             .expect(200)
             .then(res => {
-              console.log(res.body);
               res.body.comments.forEach(comment => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
@@ -567,7 +564,6 @@ describe("/api", () => {
           .send({})
           .expect(200)
           .then(res => {
-            console.log(res.body.comment);
             expect(res.body.comment).to.have.all.keys([
               "comment_id",
               "author",

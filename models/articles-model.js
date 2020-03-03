@@ -26,7 +26,6 @@ const updateArticleById = (articleId, voteChange) => {
   if (inc_votes === undefined) {
     inc_votes = 0;
   }
-  console.log(voteChange, inc_votes);
 
   return connection("articles")
     .where("article_id", "=", articleId)
