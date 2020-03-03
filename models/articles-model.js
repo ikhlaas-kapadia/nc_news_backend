@@ -79,10 +79,7 @@ const fetchArticles = (
         .modify(queryBuilder => {
           if (author !== undefined) {
             queryBuilder.where("articles.author", author);
-          }
-        })
-        .modify(queryBuilder => {
-          if (topic !== undefined) {
+          } else if (topic !== undefined) {
             queryBuilder.where("articles.topic", topic);
           }
         })
