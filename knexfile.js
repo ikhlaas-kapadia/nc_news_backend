@@ -1,6 +1,6 @@
-const { DB_URL } = process.env;
-console.log(DB_URL);
+// console.log(DB_URL);
 const ENV = process.env.NODE_ENV || "development";
+const { DB_URL } = process.env;
 
 const baseConfig = {
   client: "pg",
