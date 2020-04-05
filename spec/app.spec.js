@@ -20,7 +20,7 @@ describe("/api", () => {
     return request(app)
       .delete("/api")
       .expect(405)
-      .then(res => {
+      .then((res) => {
         expect(res.body.msg).to.equal("Method not allowed");
       });
   });
@@ -29,8 +29,8 @@ describe("/api", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
-        .then(res => {
-          res.body.topics.forEach(res => {
+        .then((res) => {
+          res.body.topics.forEach((res) => {
             expect(res).to.have.all.keys(["slug", "description"]);
           });
           expect(res.body.topics.length).to.equal(3);
@@ -40,7 +40,7 @@ describe("/api", () => {
       return request(app)
         .get("/api/chickenwings")
         .expect(404)
-        .then(res => {
+        .then((res) => {
           expect(res.body.msg).to.equal("Invalid Path");
         });
     });
@@ -48,7 +48,7 @@ describe("/api", () => {
       return request(app)
         .patch("/api/topics")
         .expect(405)
-        .then(res => {
+        .then((res) => {
           expect(res.body.msg).to.equal("Method not allowed");
         });
     });
@@ -59,11 +59,11 @@ describe("/api", () => {
         return request(app)
           .get("/api/users/butter_bridge")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.user).to.have.all.keys([
               "username",
               "avatar_url",
-              "name"
+              "name",
             ]);
             expect(res.body.user).to.be.an("object");
           });
@@ -72,7 +72,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/users/1")
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Invalid Username");
           });
       });
@@ -80,7 +80,7 @@ describe("/api", () => {
         return request(app)
           .put("/api/users/1")
           .expect(405)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Method not allowed");
           });
       });
@@ -92,7 +92,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles/1")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -101,7 +101,7 @@ describe("/api", () => {
               "topic",
               "author",
               "created_at",
-              "comment_count"
+              "comment_count",
             ]);
           });
       });
@@ -110,7 +110,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles/999")
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Article ID does not exist");
           });
       });
@@ -118,7 +118,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles/jsjsjs")
           .expect(400)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
@@ -126,7 +126,7 @@ describe("/api", () => {
         return request(app)
           .put("/api/articles/1")
           .expect(405)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Method not allowed");
           });
       });
@@ -135,7 +135,7 @@ describe("/api", () => {
           .patch("/api/articles/1")
           .send({ inc_votes: 1 })
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -143,7 +143,7 @@ describe("/api", () => {
               "votes",
               "topic",
               "author",
-              "created_at"
+              "created_at",
             ]);
           });
       });
@@ -152,7 +152,7 @@ describe("/api", () => {
           .patch("/api/articles/1")
           .send({})
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.article).to.have.all.keys([
               "article_id",
               "title",
@@ -160,7 +160,7 @@ describe("/api", () => {
               "votes",
               "topic",
               "author",
-              "created_at"
+              "created_at",
             ]);
           });
       });
@@ -169,7 +169,7 @@ describe("/api", () => {
           .patch("/api/articles/999")
           .send({ inc_votes: 1 })
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Article ID does not exist");
           });
       });
@@ -178,7 +178,7 @@ describe("/api", () => {
           .patch("/api/articles/dhdhdh")
           .send({ inc_votes: 1 })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
@@ -187,7 +187,7 @@ describe("/api", () => {
           .patch("/api/articles/1")
           .send({ inc_votes: "cats" })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
@@ -197,7 +197,7 @@ describe("/api", () => {
           .patch("/api/articles/1")
           .send({ inc_votes: "cats", name: "mitch" })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
@@ -208,7 +208,7 @@ describe("/api", () => {
             .post("/api/articles/1/comments")
             .send({ username: "butter_bridge", body: "test comment" })
             .expect(201)
-            .then(res => {
+            .then((res) => {
               //ask tutors as directing through same psql error
               expect(res.body.comment.body).to.equal("test comment");
             });
@@ -218,7 +218,7 @@ describe("/api", () => {
             .post("/api/articles/9999/comments")
             .send({ username: "butter_bridge", body: "test comment" })
             .expect(404)
-            .then(res => {
+            .then((res) => {
               //ask tutors as directing through same psql error
               expect(res.body.msg).to.equal("ID not found");
             });
@@ -228,7 +228,7 @@ describe("/api", () => {
             .post("/api/articles/1/comments")
             .send({})
             .expect(400)
-            .then(res => {
+            .then((res) => {
               //ask tutors as directing through same psql error
               expect(res.body.msg).to.equal("Invalid Input");
             });
@@ -238,7 +238,7 @@ describe("/api", () => {
             .post("/api/articles/1/comments")
             .send({ user: "butter_bridge", bod: "test comment" })
             .expect(400)
-            .then(res => {
+            .then((res) => {
               //ask tutors as directing through same psql error
               expect(res.body.msg).to.equal("Invalid Input");
             });
@@ -247,7 +247,7 @@ describe("/api", () => {
           return request(app)
             .put("/api/articles/1/comments")
             .expect(405)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.equal("Method not allowed");
             });
         });
@@ -255,19 +255,19 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments")
             .expect(200)
-            .then(res => {
-              res.body.comments.forEach(comment => {
+            .then((res) => {
+              res.body.comments.forEach((comment) => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
                   "votes",
                   "created_at",
                   "author",
-                  "body"
+                  "body",
                 ]);
               });
               expect(res.body.comments).to.be.an("array");
               expect(res.body.comments).to.be.sortedBy("created_at", {
-                descending: true
+                descending: true,
               });
             });
         });
@@ -275,7 +275,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/999/comments")
             .expect(404)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.equal("ID not found");
             });
         });
@@ -283,7 +283,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/hello/comments")
             .expect(400)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.equal("Invalid Input");
             });
         });
@@ -293,18 +293,18 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?sort_by=created_at")
             .expect(200)
-            .then(res => {
-              res.body.comments.forEach(comment => {
+            .then((res) => {
+              res.body.comments.forEach((comment) => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
                   "votes",
                   "created_at",
                   "author",
-                  "body"
+                  "body",
                 ]);
               });
               expect(res.body.comments).to.be.sortedBy("created_at", {
-                descending: true
+                descending: true,
               });
             });
         });
@@ -312,18 +312,18 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?order=asc")
             .expect(200)
-            .then(res => {
-              res.body.comments.forEach(comment => {
+            .then((res) => {
+              res.body.comments.forEach((comment) => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
                   "votes",
                   "created_at",
                   "author",
-                  "body"
+                  "body",
                 ]);
               });
               expect(res.body.comments).to.be.sortedBy("created_at", {
-                descending: false
+                descending: false,
               });
             });
         });
@@ -331,18 +331,18 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?sort_by=votes")
             .expect(200)
-            .then(res => {
-              res.body.comments.forEach(comment => {
+            .then((res) => {
+              res.body.comments.forEach((comment) => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
                   "votes",
                   "created_at",
                   "author",
-                  "body"
+                  "body",
                 ]);
               });
               expect(res.body.comments).to.be.sortedBy("votes", {
-                descending: true
+                descending: true,
               });
             });
         });
@@ -350,18 +350,18 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?sort_by=votes&&order=asc")
             .expect(200)
-            .then(res => {
-              res.body.comments.forEach(comment => {
+            .then((res) => {
+              res.body.comments.forEach((comment) => {
                 expect(comment).to.have.all.keys([
                   "comment_id",
                   "votes",
                   "created_at",
                   "author",
-                  "body"
+                  "body",
                 ]);
               });
               expect(res.body.comments).to.be.sortedBy("votes", {
-                descending: false
+                descending: false,
               });
             });
         });
@@ -369,7 +369,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?sort_by=points&&order=asc")
             .expect(400)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.be.equal("Invalid query");
             });
         });
@@ -377,7 +377,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/1/comments?sort_by=votes&&order=banana")
             .expect(400)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.be.equal("Invalid order query");
             });
         });
@@ -385,7 +385,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/999/comments?sort_by=created_at&&order=desc")
             .expect(404)
-            .then(res => {
+            .then((res) => {
               expect(res.body.msg).to.equal("ID not found");
             });
         });
@@ -393,7 +393,7 @@ describe("/api", () => {
           return request(app)
             .get("/api/articles/2/comments")
             .expect(200)
-            .then(res => {
+            .then((res) => {
               expect(res.body.comments).to.be.an("array");
               expect(res.body.comments.length).to.equal(0);
             });
@@ -405,8 +405,8 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
-          .then(res => {
-            res.body.articles.forEach(res => {
+          .then((res) => {
+            res.body.articles.forEach((res) => {
               expect(res).to.have.all.keys([
                 "author",
                 "title",
@@ -414,7 +414,7 @@ describe("/api", () => {
                 "topic",
                 "created_at",
                 "votes",
-                "comment_count"
+                "comment_count",
               ]);
             });
           });
@@ -423,7 +423,7 @@ describe("/api", () => {
         return request(app)
           .patch("/api/articles")
           .expect(405)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Method not allowed");
           });
       });
@@ -431,9 +431,9 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.articles).to.be.sortedBy("created_at", {
-              descending: true
+              descending: true,
             });
           });
       });
@@ -441,9 +441,9 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?sort_by=votes&&order=asc")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.articles).to.be.sortedBy("votes", {
-              descending: false
+              descending: false,
             });
           });
       });
@@ -451,7 +451,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?sort_by=points")
           .expect(400)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.be.equal("Invalid query");
           });
       });
@@ -459,7 +459,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?order=banana")
           .expect(400)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.be.equal("Invalid order query");
           });
       });
@@ -467,11 +467,11 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?author=butter_bridge")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.articles).to.be.sortedBy("created_at", {
-              descending: true
+              descending: true,
             });
-            res.body.articles.forEach(article => {
+            res.body.articles.forEach((article) => {
               expect(article.author).to.equal("butter_bridge");
             });
           });
@@ -480,7 +480,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?author=lurker")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.articles).to.be.an("array");
             expect(res.body.articles.length).to.equal(0);
           });
@@ -489,8 +489,8 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?topic=mitch")
           .expect(200)
-          .then(res => {
-            res.body.articles.forEach(article => {
+          .then((res) => {
+            res.body.articles.forEach((article) => {
               expect(article.topic).to.equal("mitch");
             });
           });
@@ -499,7 +499,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?topic=paper")
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.articles).to.be.an("array");
             expect(res.body.articles.length).to.equal(0);
           });
@@ -508,7 +508,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?topic=hello")
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Does not exist");
           });
       });
@@ -516,7 +516,7 @@ describe("/api", () => {
         return request(app)
           .get("/api/articles?author=hello")
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Does not exist");
           });
       });
@@ -529,14 +529,14 @@ describe("/api", () => {
           .patch("/api/comments/1")
           .send({ inc_votes: 1 })
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.comment).to.have.all.keys([
               "comment_id",
               "author",
               "article_id",
               "votes",
               "body",
-              "created_at"
+              "created_at",
             ]);
           });
       });
@@ -545,7 +545,7 @@ describe("/api", () => {
           .patch("/api/comments/999")
           .send({ inc_votes: 1 })
           .expect(404)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Comment ID does not exist");
           });
       });
@@ -554,7 +554,7 @@ describe("/api", () => {
           .patch("/api/comments/dhdhdh")
           .send({ inc_votes: 1 })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
@@ -563,14 +563,14 @@ describe("/api", () => {
           .patch("/api/comments/1")
           .send({})
           .expect(200)
-          .then(res => {
+          .then((res) => {
             expect(res.body.comment).to.have.all.keys([
               "comment_id",
               "author",
               "article_id",
               "votes",
               "body",
-              "created_at"
+              "created_at",
             ]);
           });
       });
@@ -579,7 +579,7 @@ describe("/api", () => {
           .patch("/api/comments/1")
           .send({ inc_votes: "cats" })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
@@ -589,31 +589,25 @@ describe("/api", () => {
           .patch("/api/comments/1")
           .send({ inc_votes: "cats", name: "mitch" })
           .expect(400)
-          .then(res => {
+          .then((res) => {
             //ask tutors as directing through same psql error
             expect(res.body.msg).to.equal("Invalid Input");
           });
       });
       it("DEL- 204, responds with no content when deleting comment", () => {
-        return request(app)
-          .delete("/api/comments/1")
-          .expect(204);
+        return request(app).delete("/api/comments/1").expect(204);
       });
       it("DEL- 404, responds with 404 when Id does not exist", () => {
-        return request(app)
-          .delete("/api/comments/999")
-          .expect(404);
+        return request(app).delete("/api/comments/999").expect(404);
       });
       it("DEL- 400, responds with 400 invalid id type", () => {
-        return request(app)
-          .delete("/api/comments/hhsh")
-          .expect(400);
+        return request(app).delete("/api/comments/hhsh").expect(400);
       });
       it("PUT - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
         return request(app)
           .put("/api/comments/1")
           .expect(405)
-          .then(res => {
+          .then((res) => {
             expect(res.body.msg).to.equal("Method not allowed");
           });
       });

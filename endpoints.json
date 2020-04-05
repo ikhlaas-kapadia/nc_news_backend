@@ -1,42 +1,142 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "Serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
-    "description": "serves an array of all topics",
+    "description": "Serves an of array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        {
+          "slug": "coding",
+          "description": "Code is love, code is life"
+        },
+        {
+          "slug": "football",
+          "description": "FOOTIE!"
+        }
+      ]
     }
   },
   "GET /api/articles": {
-    "description": "serves an object of ",
+    "description": "Serves an array of all articles ",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
+          "article_id": 33,
           "title": "Seafood substitutions are increasing",
+          "votes": 8,
           "topic": "cooking",
           "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "comment_count": "6"
+        },
+        {
+          "article_id": 28,
+          "title": "High Altitude Cooking",
+          "votes": -1,
+          "topic": "cooking",
+          "author": "happyamy2016",
+          "created_at": "2018-05-27T03:32:28.514Z",
+          "comment_count": "5"
         }
       ]
     }
   },
   "GET /api/articles/article_id": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "Serves an object of a single article's information by article ID",
+    "queries": [],
     "exampleResponse": {
-      "articles": [
+      "article": [
         {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+          "article_id": 1,
+          "title": "Running a Node App",
+          "body": "Body Text.",
+          "votes": 0,
+          "topic": "coding",
+          "author": "jessjelly",
+          "created_at": "2016-08-18T12:07:52.389Z",
+          "comment_count": "8"
         }
       ]
+    }
+  },
+  "GET /api/users/username": {
+    "description": "Serves an object with a particular user's details",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "weegembump",
+        "avatar_url": "https://www.upandrunning.co.uk/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/m/r/mr-bump.jpg",
+        "name": "Gemma Bump"
+      }
+    }
+  },
+  "GET /api/articles/article_id/comments": {
+    "description": "Serves an array of comments for an article by it's ID",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 44,
+          "author": "grumpy19",
+          "votes": 4,
+          "created_at": "2017-11-20T08:58:48.322Z",
+          "body": "Error est qui id corrupti et quod enim accusantium minus. Deleniti quae ea magni officiis et qui suscipit non."
+        },
+        {
+          "comment_id": 52,
+          "author": "jessjelly",
+          "votes": 10,
+          "created_at": "2017-07-31T08:14:13.076Z",
+          "body": "Consectetur deleniti sed. Omnis et dolore omnis aspernatur. Et porro accusantium. Tempora ullam voluptatum et rerum."
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/article_id": {
+    "description": "Serves an object of an article with updated votes",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "body": "Body Text.",
+        "votes": 0,
+        "topic": "coding",
+        "author": "jessjelly",
+        "created_at": "2016-08-18T12:07:52.389Z",
+        "comment_count": "8"
+      }
+    }
+  },
+  "PATCH /api/comments/comment_id": {
+    "description": "Serves an object of a comment with updated votes",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 52,
+        "author": "jessjelly",
+        "article_id": 9,
+        "votes": 17,
+        "created_at": "2017-11-22T12:36:03.389Z",
+        "body": "Body text!"
+      }
+    }
+  },
+  "DELETE /api/comments/comment_id": {
+    "description": "Responds with status 204 when item is deleted",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 52,
+        "author": "jessjelly",
+        "article_id": 9,
+        "votes": 17,
+        "created_at": "2017-11-22T12:36:03.389Z",
+        "body": "Body text!"
+      }
     }
   }
 }
