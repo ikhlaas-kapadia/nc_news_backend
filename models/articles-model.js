@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
 const { checkExists } = require("../db/utils/utils");
-const fetchArticleById = articleId => {
+const fetchArticleById = (articleId) => {
   return connection
     .select("articles.*")
     .from("articles")
@@ -8,11 +8,11 @@ const fetchArticleById = articleId => {
     .groupBy("articles.article_id")
     .where("articles.article_id", articleId)
     .count({ comment_count: "comments.article_id" })
-    .then(result => {
+    .then((result) => {
       if (result.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: "Article ID does not exist"
+          msg: "Article ID does not exist",
         });
       } else {
         return { article: result[0] };
@@ -33,11 +33,11 @@ const updateArticleById = (articleId, voteChange) => {
     .then(() => {
       return connection("articles").where("article_id", "=", articleId);
     })
-    .then(updatedArticle => {
+    .then((updatedArticle) => {
       if (updatedArticle.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: "Article ID does not exist"
+          msg: "Article ID does not exist",
         });
       } else {
         return { article: updatedArticle[0] };
@@ -71,12 +71,13 @@ const fetchArticles = (
           "articles.votes",
           "articles.topic",
           "articles.author",
-          "articles.created_at"
+          "articles.created_at",
+          "articles.body"
         )
         .from("articles")
         .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
         .groupBy("articles.article_id")
-        .modify(queryBuilder => {
+        .modify((queryBuilder) => {
           if (author !== undefined) {
             queryBuilder.where("articles.author", author);
           } else if (topic !== undefined) {
@@ -85,15 +86,15 @@ const fetchArticles = (
         })
         .orderBy(sortBy, order)
         .count({ comment_count: "comments.article_id" })
-        .then(formattedArticles => {
+        .then((formattedArticles) => {
           if (formattedArticles.length === 0) {
-            return checkExists(table, column, value).then(funcres => {
+            return checkExists(table, column, value).then((funcres) => {
               if (funcres) {
                 return { articles: formattedArticles };
               } else {
                 return Promise.reject({
                   status: 404,
-                  msg: "Does not exist"
+                  msg: "Does not exist",
                 });
               }
             });

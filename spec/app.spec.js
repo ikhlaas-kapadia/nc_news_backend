@@ -410,6 +410,7 @@ describe("/api", () => {
               expect(res).to.have.all.keys([
                 "author",
                 "title",
+                "body",
                 "article_id",
                 "topic",
                 "created_at",
