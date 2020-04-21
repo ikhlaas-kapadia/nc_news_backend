@@ -5,6 +5,7 @@ const { expect } = require("chai");
 const request = require("supertest");
 const connection = require("../db/connection");
 const chai = require("chai");
+const endpoints = require("../endpoints.json");
 chai.use(require("sams-chai-sorted"));
 
 describe("/api", () => {
@@ -16,6 +17,15 @@ describe("/api", () => {
   beforeEach(() => {
     return connection.seed.run();
   });
+  it("GET - 200 responds with a json describing all the ednpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.eql(endpoints);
+      });
+  });
+
   it("DELETE - 405 responds with Method not allowed when HTTP method not allowed on specified route", () => {
     return request(app)
       .delete("/api")
